@@ -2,6 +2,11 @@ using System.Linq;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace Assets.Scripts
 {
@@ -9,6 +14,7 @@ namespace Assets.Scripts
     {
         [SerializeField]
         private Text myText;
+        private int time = 0;
 
         public static string infoString;
         public static PlayerController CurrCell;
@@ -41,6 +47,7 @@ namespace Assets.Scripts
         // Start is called before the first frame update
         private void Start()
         {
+            time = 0;
             myText.text = "Starting Game...";
             SpawnManager.SMOnCellCreatedTriggerEnter += OnCellCreated;
             SpawnManager.SMOnCellDestroyedTriggerEnter += OnCellDestroyed;
@@ -70,7 +77,7 @@ namespace Assets.Scripts
 
         private void Update()
         {
-
+            time++;
             var colliders = Physics.OverlapSphere(new Vector3(0, 0, 0), 1000);
             var filteredColliders = colliders.Where(c => c.CompareTag("Cell")).ToArray();
             if (numCells != filteredColliders.Length) {
@@ -103,6 +110,39 @@ namespace Assets.Scripts
                 "SightRadiusPoints: " + ((float)sightRadiusPoints / numCells).ToString("n2") + "\n" +
                 "SizePoints: " + ((float)sizePoints / numCells).ToString("n2") + "\n" +
                 "AVG: " + ((float)(sizePoints + sightRadiusPoints + foodWorthPoints + replicationRatePoints + speedPoints + maxFullnessPoints) / numCells).ToString("n2");
+
+            if(time % 100 == 0)
+            {
+                WriteInfo("stats.csv");
+            }
+
+
+        }
+
+        void WriteInfo(string filePath)
+        {
+            var records = new List<Foo>
+        {
+            new Foo { time = time, numCells = numCells }
+        };
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                // Don't write the header again.
+                HasHeaderRecord = false,
+            };
+            using (var stream = File.Open(filePath, FileMode.Append))
+            using (var writer = new StreamWriter(stream))
+            using (var csv = new CsvWriter(writer, config))
+            {
+                csv.WriteRecords(records);
+            }
         }
     }
+
+}
+
+public class Foo
+{
+    public int time { get; set; }
+    public int numCells { get; set; }
 }
