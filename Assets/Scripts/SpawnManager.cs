@@ -95,7 +95,7 @@ namespace Assets.Scripts
         // Update is called once per frame
         private void Update()
         {
-            if (totalTimer % 1000 == 0)
+            if (totalTimer % 4000 == 0)
             {
                 foodTimer++;
             }

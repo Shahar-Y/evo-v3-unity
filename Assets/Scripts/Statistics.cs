@@ -11,10 +11,13 @@ namespace Assets.Scripts
         private Text myText;
 
         public static string infoString;
+        public static PlayerController CurrCell;
+        public static string clickedItemType = "NONE";
 
         [SerializeField]
         private Text info;
         private static int numCells;
+        private const string cellInfoString = "Cell Info:\n";
 
         private static int maxFullnessPoints;
         private static int speedPoints;
@@ -77,7 +80,19 @@ namespace Assets.Scripts
             var totSpeed = Enumerable.Sum(filteredColliders, cell => cell.GetComponent<PlayerController>().CellParams.SpeedPoints);
             // Debug.Log("totSpeed: " + totSpeed);
 
-            info.text = infoString;
+            info.text = cellInfoString;
+
+            if (CurrCell && clickedItemType == "Cell")
+            {
+                info.text = cellInfoString + infoString;
+                info.text += "\nFullness: " + CurrCell.Fullness + "\nTime To Reproduce: " + CurrCell.TimeToReplication;
+            } else if(clickedItemType == "Food")
+            {
+                info.text += infoString;
+            } else
+            {
+                info.text += "No cell chosen";
+            }
 
             myText.text =
                 "Number of cells: " + numCells.ToString() + "\n" +

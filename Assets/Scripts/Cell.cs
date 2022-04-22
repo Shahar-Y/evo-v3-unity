@@ -63,7 +63,8 @@ namespace Assets.Scripts
                 ", Speed: " + SpeedPoints +
                 ", ReplicationRate: " + ReplicationRatePoints +
                 ", FoodWorth: " + FoodWorthPoints +
-                ", SightRadius: " + SightRadiusPoints;
+                ", SightRadius: " + SightRadiusPoints +
+                ", SizePoints: " + SizePoints;
             return cellString;
         }
 

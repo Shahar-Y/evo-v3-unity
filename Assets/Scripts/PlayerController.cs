@@ -6,21 +6,21 @@ namespace Assets.Scripts
 {
     public class PlayerController : MonoBehaviour
     {
+        [SerializeField]
+        public int TimeToReplication = 9000;
+
+        [SerializeField]
+        private int directionCount;
 
         public Cell CellParams { get; set; }
-        private Rigidbody rb;
-
-        [SerializeField]
-        private int timeToReplication = 9000;
-        [SerializeField]
-        private int fullness;
-        private int directionCount;
-        private Vector3 currDirection;
-        private static object ccLock = new object();
-
+        public int Fullness { get; set; }
         public string MyName { get; set; } = "";
         public bool IsDead { get; set; } = false;
         public readonly object CellGuard = new object();
+
+        private Rigidbody rb;
+        private Vector3 currDirection;
+
 
         // Start is called before the first frame update
         private void Awake()
@@ -33,9 +33,9 @@ namespace Assets.Scripts
         {
             MyName = System.Guid.NewGuid().ToString();
             rb = GetComponent<Rigidbody>();
-            timeToReplication =
+            TimeToReplication =
                 CellParams.CellReplicationRate + Random.Range(Globals.ReplicationRateUnits, -Globals.ReplicationRateUnits);
-            fullness = CellParams.BeginningFullness;
+            Fullness = CellParams.BeginningFullness;
             directionCount = 0;
             currDirection = new Vector3(
                 Random.Range(-1.0f, 1.0f),
@@ -69,9 +69,9 @@ namespace Assets.Scripts
         // Update is called once per frame
         private void Update()
         {
-            fullness -= 1;
-            timeToReplication -= 1;
-            if (fullness <= 0)
+            Fullness -= 1;
+            TimeToReplication -= 1;
+            if (Fullness <= 0)
             {
                 lock (CellGuard)
                 {
@@ -81,14 +81,14 @@ namespace Assets.Scripts
                 }
             }
 
-            if (timeToReplication <= 0 && fullness > CellParams.CellMaxFullness / 2)
+            if (TimeToReplication <= 0 && Fullness > CellParams.CellMaxFullness / 2)
             {
                 lock (CellGuard)
                 {
-                    fullness /= 2;
-                    timeToReplication = CellParams.CellReplicationRate >= Globals.MinReplicationRate ?
+                    Fullness /= 2;
+                    TimeToReplication = CellParams.CellReplicationRate >= Globals.MinReplicationRate ?
                                         CellParams.CellReplicationRate : Globals.MinReplicationRate;
-                    CellCreatedTriggerEnter(CellParams, transform.position, fullness);
+                    CellCreatedTriggerEnter(CellParams, transform.position, Fullness);
                 }
             }
 
@@ -170,7 +170,7 @@ namespace Assets.Scripts
                 currDirection = -(firstEnemyLocation - transform.position).normalized;
                 return;
             }
-            else if (fullness + CellParams.CellFoodWorth < CellParams.CellMaxFullness)
+            else if (Fullness + CellParams.CellFoodWorth < CellParams.CellMaxFullness)
             {
                 currDirection = (firstFoodsDistance < firstFoodCellDistance) ?
                     (firstFoodsLocation - transform.position).normalized :
@@ -207,7 +207,7 @@ namespace Assets.Scripts
                     break;
             }
 
-            fullness = fullness + foodWorth;
+            Fullness = Fullness + foodWorth;
 
             // After food is consumed, change direction.
             ChangeToRandomDirection();
@@ -219,7 +219,7 @@ namespace Assets.Scripts
             if (other.CompareTag("Food"))
             {
                 // If cell is full, ignore the food
-                if (fullness + CellParams.CellFoodWorth > CellParams.CellMaxFullness)
+                if (Fullness + CellParams.CellFoodWorth > CellParams.CellMaxFullness)
                 {
                     return;
                 }

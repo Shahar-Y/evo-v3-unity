@@ -1,6 +1,3 @@
-using Newtonsoft.Json;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -29,20 +26,18 @@ namespace Assets.Scripts
                 {
                     if (hit.transform != null && hit.collider.tag == "Cell")
                     {
-                        Cell cellParams = hit.transform.gameObject.GetComponent<PlayerController>().CellParams;
-                        string objString = JsonConvert.SerializeObject(cellParams);
-                        objString = objString.Replace(",", System.Environment.NewLine);
-                        objString = objString.Replace("{", "");
-                        objString = objString.Replace("}", "");
-                        objString = objString.Replace("\"", "");
-                        Statistics.infoString = objString;
-                        // hit.transform.gameObject.GetComponent<Renderer>().material.color = new Color(100, 100, 100);
-                        if( !auraInstance )
-                        {
-                            auraInstance = Instantiate(auraPrefab, new Vector3(1, 1, 1), Quaternion.identity);
-                        }
-                        auraInstance.transform.position = hit.transform.position;
-                        auraInstance.transform.parent = hit.transform;
+                        PlayerController cell = hit.transform.gameObject.GetComponent<PlayerController>();
+                        Cell cellParams = cell.CellParams;
+                        string cellParamsString = cellParams.CellToString();
+                        cellParamsString = cellParamsString.Replace(",", System.Environment.NewLine);
+                        SetStatisticsPointerData(cellParamsString, cell, "Cell");
+                        ChangeAura(hit.transform);
+
+                    } else if (hit.transform != null && hit.collider.tag == "Food")
+                    {
+                        Debug.Log("Food clicked");
+                        ChangeAura(hit.transform);
+                        SetStatisticsPointerData("Just some food", null, "Food");
                     }
                 }
             }
@@ -59,5 +54,26 @@ namespace Assets.Scripts
 
             // transform.Rotate(0, 3 * Time.deltaTime, 0);
         }
+
+        private void SetStatisticsPointerData(string infoString, PlayerController currCell, string chosenObjectType)
+        {
+            Statistics.infoString = infoString;
+            Statistics.CurrCell = currCell;
+            Statistics.clickedItemType = chosenObjectType;
+        }
+
+        private void ChangeAura(Transform objectTransform)
+        {
+            // Create aura around cell if none exists
+            if (!auraInstance)
+            {
+                auraInstance = Instantiate(auraPrefab, new Vector3(1, 1, 1), Quaternion.identity);
+            }
+            auraInstance.transform.position = objectTransform.position;
+            auraInstance.transform.parent = objectTransform.transform;
+        }
+
+
+
     }
 }
