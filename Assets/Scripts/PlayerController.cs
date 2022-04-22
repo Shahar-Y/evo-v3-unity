@@ -17,7 +17,6 @@ namespace Assets.Scripts
         private int directionCount;
         private Vector3 currDirection;
         private static object ccLock = new object();
-        private static bool triggerOn = false;
 
         public string MyName { get; set; } = "";
         public bool IsDead { get; set; } = false;
@@ -65,12 +64,11 @@ namespace Assets.Scripts
             }
         }
 
-        public static event System.Action<Vector3, Cell, int> OnCellDivideTriggerEnter;
+        // public static event System.Action<Vector3, Cell, int> OnCellDivideTriggerEnter;
 
         // Update is called once per frame
         private void Update()
         {
-            triggerOn = false;
             fullness -= 1;
             timeToReplication -= 1;
             if (fullness <= 0)

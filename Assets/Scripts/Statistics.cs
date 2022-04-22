@@ -9,6 +9,11 @@ namespace Assets.Scripts
     {
         [SerializeField]
         private Text myText;
+
+        public static string infoString;
+
+        [SerializeField]
+        private Text info;
         private static int numCells;
 
         private static int maxFullnessPoints;
@@ -71,6 +76,8 @@ namespace Assets.Scripts
 
             var totSpeed = Enumerable.Sum(filteredColliders, cell => cell.GetComponent<PlayerController>().CellParams.SpeedPoints);
             // Debug.Log("totSpeed: " + totSpeed);
+
+            info.text = infoString;
 
             myText.text =
                 "Number of cells: " + numCells.ToString() + "\n" +
