@@ -10,7 +10,7 @@ namespace Assets.Scripts
         public int SpeedPoints { get; set; }
         public float CellSpeed { get { return SpeedPoints * Globals.SpeedUnits; } }
         public int ReplicationRatePoints { get; set; }
-        public int CellReplicationRate { get { return Globals.MaxReplicationRate - (ReplicationRatePoints * Globals.ReplicationRateUnits); } }
+        public int CellReplicationRate { get { return Globals.MaxReplicationRate - (ReplicationRatePoints * Globals.ReplicationRateUnits) + Random.Range(0, ReplicationRatePoints); } }
         public int FoodWorthPoints { get; set; }
 
         public int CellFoodWorth { get { return FoodWorthPoints * Globals.FoodWorthUnits; } }

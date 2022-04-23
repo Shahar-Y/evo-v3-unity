@@ -317,7 +317,7 @@ Transform:
   m_GameObject: {fileID: 178015758}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1000, y: 1, z: 1000}
+  m_LocalScale: {x: 5000, y: 1, z: 5000}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1233396857}
@@ -896,7 +896,8 @@ MonoBehaviour:
   cellPrefab: {fileID: 4387067626889397868, guid: 413fb80a93160024995ed93a99a56fa3, type: 3}
   foodTimer: 0
   totalTimer: 0
-  radius: 0
+  initialRadius: 0
+  currRadius: 0
 --- !u!1 &1233396855
 GameObject:
   m_ObjectHideFlags: 0
