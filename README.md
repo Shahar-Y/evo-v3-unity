@@ -11,7 +11,7 @@
 - Unity version 2021.3.0f1
 - 8 GB RAM
 
-[https://media.giphy.com/media/lgodyuxB7q1QK1Jkmb/giphy.gif](simulation gif)
+![Simulation Gif](https://media.giphy.com/media/lgodyuxB7q1QK1Jkmb/giphy.gif)
 
 ### While the simulation is running, you can travel and click on cells to get their current real-time data!
 
@@ -29,4 +29,4 @@
 
 #### Example output of the simulation data converted to graph:
 
-[ReadmeFolder/evo-v3-stats.png](evo-v3-stats)
+![evo-v3-stats](./ReadmeFolder/evo-v3-stats.png)
