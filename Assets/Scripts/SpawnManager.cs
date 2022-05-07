@@ -16,7 +16,10 @@ namespace Assets.Scripts
         [SerializeField]
         private int totalTimer;
         [SerializeField]
-        private float radius;
+        private float initialRadius;
+        [SerializeField]
+        private float currRadius;
+
 
         private int dropFoodCount;
         private bool isFirstCell;
@@ -25,8 +28,8 @@ namespace Assets.Scripts
         private void Start()
         {
             Debug.Log("STARTING!");
-
-            radius = 300;
+            initialRadius = 300;
+            currRadius = 20;
             foodTimer = 0;
             totalTimer = 0;
             isFirstCell = true;
@@ -95,23 +98,32 @@ namespace Assets.Scripts
         // Update is called once per frame
         private void Update()
         {
-            if (totalTimer % 1000 == 0)
+            totalTimer++;
+
+            if (totalTimer % 4000 == 0)
             {
                 foodTimer++;
             }
-
-            totalTimer++;
-            dropFoodCount--;
-            if (dropFoodCount < 0)
+            if (totalTimer % 10 == 0)
             {
-                dropFoodCount = foodTimer;
-                float randRad = radius * Mathf.Sqrt(Random.value);
-                float theta = Random.value * 2 * Mathf.PI;
-                float mineX = (float)(randRad * System.Math.Cos(theta));
-                float mineY = (float)(randRad * System.Math.Sin(theta));
-                var foodInstance = Instantiate(foodPrefab, new Vector3(mineX, 3, mineY), Quaternion.identity);
-                foodInstance.transform.parent = GameObject.Find("Foods").transform;
+                currRadius = (currRadius >= Globals.MaxRadius) ? Globals.MaxRadius : currRadius + 1;
             }
+            if(totalTimer % 5 == 0)
+            {
+                GenerateRandomFood();
+            }
+
+            
+        }
+
+        private void GenerateRandomFood()
+        {
+            float randRad = currRadius * Mathf.Sqrt(Random.value);
+            float theta = Random.value * 2 * Mathf.PI;
+            float mineX = (float)(randRad * System.Math.Cos(theta));
+            float mineY = (float)(randRad * System.Math.Sin(theta));
+            var foodInstance = Instantiate(foodPrefab, new Vector3(mineX, 3, mineY), Quaternion.identity);
+            foodInstance.transform.parent = GameObject.Find("Foods").transform;
         }
 
         public float[] GetNormallizedList(float[] originalArray)
